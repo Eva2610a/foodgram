@@ -1,0 +1,29 @@
+volumes:
+  postgres_data:
+  static_value:
+  media_value:
+services:
+  db:
+    image: postgres:13.10
+    env_file: .env
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+  backend:
+    image: pivko228/foodgram_back:latest
+    env_file: .env
+    volumes:
+      - static_value:/backend_static
+      - media_value:/app/media/
+  frontend:
+    env_file: .env
+    image: pivko228/foodgram_front:latest
+    volumes:
+      - static_value:/app/result_build/build
+  nginx:
+    image: pivko228/nginx:1.25.4-alpine
+    ports:
+      - "9080:80"
+    env_file: .env
+    volumes:
+      - static_value:/static/
+      - media_value:/media/
