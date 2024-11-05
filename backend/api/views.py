@@ -32,9 +32,9 @@ class IngredientViewSet(viewsets.ReadOnlyModelViewSet):
     """Вьюсет ингредиентов."""
 
     serializer_class = IngredientSerializer
-    queryset = Ingredient.objects.order_by('id')
-    permission_classes = (AllowAny,)
-    filter_backends = (DjangoFilterBackend)
+    queryset = Ingredient.objects.all()
+    permission_classes = (AllowAny, )
+    filter_backends = (DjangoFilterBackend, )
     filterset_class = IngredientFilter
     search_fields = ('^name',)
 
@@ -42,6 +42,7 @@ class IngredientViewSet(viewsets.ReadOnlyModelViewSet):
 class TagViewSet(viewsets.ReadOnlyModelViewSet):
     """Вьюсет тегов."""
 
+    permission_classes = (AllowAny, )
     serializer_class = TagSerializer
     queryset = Tag.objects.all()
 
@@ -51,7 +52,7 @@ class CustomUserViewSet(UserViewSet):
 
     queryset = User.objects.all()
     serializer_class = CustomUserSerializer
-    permission_classes = (IsAuthenticatedOrReadOnly,)
+    permission_classes = (IsAuthenticatedOrReadOnly, )
     pagination_class = LimitOffsetPagination
 
     @action(
@@ -75,7 +76,7 @@ class CustomUserViewSet(UserViewSet):
     @action(
         detail=True,
         methods=('post', 'delete'),
-        permission_classes=(IsAuthenticated,),
+        permission_classes=(IsAuthenticated, ),
         url_path='subscribe',
         url_name='subscribe',
     )
@@ -90,9 +91,15 @@ class CustomUserViewSet(UserViewSet):
             if user == author:
                 return Response('Вы пытаетесь подписаться на себя!!',
                                 status=status.HTTP_400_BAD_REQUEST)
+            if Follow.objects.filter(user=user, author=author).exists():
+                return Response(
+                    'Подписка уже оформлена!',
+                    status=status.HTTP_400_BAD_REQUEST
+                )
             if change_subscription_status.exists():
                 return Response(f'Вы теперь подписаны на {author}',
                                 status=status.HTTP_400_BAD_REQUEST)
+
             subscribe = Follow.objects.create(
                 user=user,
                 author=author
@@ -104,8 +111,22 @@ class CustomUserViewSet(UserViewSet):
             change_subscription_status.delete()
             return Response(f'Вы отписались от {author}',
                             status=status.HTTP_204_NO_CONTENT)
-        return Response(f'Вы не подписаны на {author}',
-                        status=status.HTTP_400_BAD_REQUEST)
+        if self.request.method == "DELETE":
+            if not Follow.objects.filter(
+                user=user, author=author
+            ).exists():
+                return Response(
+                    {"errors": "Вы уже отписаны!"},
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
+
+            subscription = get_object_or_404(
+                Follow, user=user, author=author
+            )
+            subscription.delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+
+        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
 
 class RecipeViewSet(ModelViewSet):
@@ -113,8 +134,8 @@ class RecipeViewSet(ModelViewSet):
 
     queryset = Recipe.objects.all()
     pagination_class = CustomPagination
-    permission_classes = (IsAuthorOrReadOnly,)
-    filter_backends = (DjangoFilterBackend,)
+    permission_classes = (IsAuthorOrReadOnly, )
+    filter_backends = (DjangoFilterBackend, )
     filterset_class = RecipeFilter
 
     def get_serializer_class(self):
@@ -133,7 +154,7 @@ class RecipeViewSet(ModelViewSet):
     @action(
         detail=True,
         methods=('post', 'delete'),
-        permission_classes=(IsAuthenticated,),
+        permission_classes=(IsAuthenticated, ),
         url_path='favorite',
         url_name='favorite',
     )
@@ -165,7 +186,7 @@ class RecipeViewSet(ModelViewSet):
     @action(
         detail=True,
         methods=('post', 'delete'),
-        permission_classes=(IsAuthenticated,),
+        permission_classes=(IsAuthenticated, ),
         url_path='shopping_cart',
         url_name='shopping_cart',
     )
@@ -210,8 +231,8 @@ class RecipeViewSet(ModelViewSet):
 
     @action(
         detail=False,
-        methods=('get',),
-        permission_classes=(IsAuthenticated,),
+        methods=('get', ),
+        permission_classes=(IsAuthenticated, ),
         url_path='download_shopping_cart',
         url_name='download_shopping_cart',
     )

@@ -32,7 +32,7 @@ class TagSerializer(ModelSerializer):
         """Класс мета."""
 
         model = Tag
-        fields = ('id', 'name', 'color', 'slug')
+        fields = ('id', 'name', 'slug')
 
 
 class IngredientSerializer(ModelSerializer):
@@ -66,7 +66,7 @@ class CustomUserSerializer(UserCreateSerializer):
 
 
 class CustomCreateUserSerializer(CustomUserSerializer):
-    """Cозданиt пользователя без проверки на подписку."""
+    """Cозданиe пользователя без проверки на подписку."""
 
     class Meta:
         """Класс мета."""
@@ -206,6 +206,15 @@ class CreateRecipeSerializer(serializers.ModelSerializer):
         """Добавление тега."""
         recipe.tags.set(tags)
 
+    @staticmethod
+    def validate_tags(value):
+        """Валидация количества тегов."""
+        if value > 1:
+            raise serializers.ValidationError(
+                'Количество тегов не должно быть больше 1!'
+            )
+        return value
+
     def create(self, validated_data):
         """Создание модели."""
         ingredients = validated_data.pop('ingredients')
@@ -280,3 +289,9 @@ class AddFavoritesSerializer(serializers.ModelSerializer):
 
         model = Recipe
         fields = ('id', 'name', 'image', 'cooking_time')
+
+
+class ShortRecipeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Recipe
+        fields = ("id", "name", "image", "cooking_time")

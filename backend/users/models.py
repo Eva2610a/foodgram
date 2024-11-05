@@ -1,6 +1,7 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
+from users.validators import validate_username
 
 class User(AbstractUser):
     """Модель для пользователей, созданная для приложения foodgram"""
@@ -13,6 +14,9 @@ class User(AbstractUser):
         max_length=150,
         verbose_name='Имя пользователя',
         unique=True,
+        validators=[
+            validate_username,
+        ],
         db_index=True
     )
     first_name = models.CharField(

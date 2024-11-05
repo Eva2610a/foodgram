@@ -24,7 +24,7 @@ services:
   nginx:
     build: ./infra/
     ports:
-      - "9080:80"
+      - "80:80"
     volumes:
       - static_value:/static/
       - media_value:/media/

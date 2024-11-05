@@ -8,7 +8,8 @@ from recipes.models import Ingredient, Recipe, Tag
 class IngredientFilter(FilterSet):
     """Поиск по названию ингредиента."""
 
-    name = rest_framework.CharFilter(lookup_expr="istartswith")
+    name = rest_framework.CharFilter(field_name='name',
+                                     lookup_expr="startswith")
 
     class Meta:
         """Класс мета."""
@@ -45,4 +46,5 @@ class RecipeFilter(django_filters.FilterSet):
         """Класс мета."""
 
         model = Recipe
-        fields = ("tags", "author", "is_favorited", "is_in_shopping_cart")
+        fields = ("tags", "author") 
+        #"is_favorited", "is_in_shopping_cart")
