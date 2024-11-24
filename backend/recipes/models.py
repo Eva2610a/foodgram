@@ -1,13 +1,12 @@
 from django.contrib.auth import get_user_model
 from django.core.validators import MinValueValidator
 from django.db import models
-
+from django.utils.crypto import get_random_string
 User = get_user_model()
 
 
 class Tag(models.Model):
     """Модель тега."""
-
     name = models.CharField(
         max_length=35,
         unique=True,
@@ -91,13 +90,20 @@ class Recipe(models.Model):
     tags = models.ManyToManyField(
         Tag,
         related_name="recipes",
-        verbose_name="Теги"
+        verbose_name="Теги",
     )
     cooking_time = models.PositiveSmallIntegerField(
         'Время приготовления',
         validators=[
             MinValueValidator(1, message='Минимальное значение 1!'),
         ]
+    )
+    short_code = models.CharField(
+        max_length=6,
+        unique=True,
+        blank=True,
+        null=True,
+        verbose_name='Короткий код'
     )
     created = models.DateTimeField(
         auto_now_add=True,
@@ -115,6 +121,19 @@ class Recipe(models.Model):
     def __str__(self):
         """Метод строкового представления модели."""
         return self.name
+
+    def generate_short_code(self):
+        """Генерирует уникальный короткий код."""
+        while True:
+            short_code = get_random_string(length=6)
+            if not Recipe.objects.filter(short_code=short_code).exists():
+                return short_code
+
+    def save(self, *args, **kwargs):
+        """Переопределяем метод save для генерации короткого кода."""
+        if not self.short_code:
+            self.short_code = self.generate_short_code()
+        super().save(*args, **kwargs)
 
 
 class IngredientInRecipe(models.Model):
@@ -158,7 +177,6 @@ class IngredientInRecipe(models.Model):
 
 class TagInRecipe(models.Model):
     """Теги рецептов."""
-
     tag = models.ForeignKey(
         Tag,
         on_delete=models.CASCADE,

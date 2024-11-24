@@ -1,10 +1,12 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from django.core.validators import RegexValidator
 
-from users.validators import validate_username
+
 
 class User(AbstractUser):
     """Модель для пользователей, созданная для приложения foodgram"""
+    USER_REGEX = r'^[\w.@+-]+$'
 
     email = models.EmailField(
         verbose_name='Электронная почта',
@@ -14,10 +16,13 @@ class User(AbstractUser):
         max_length=150,
         verbose_name='Имя пользователя',
         unique=True,
+        db_index=True,
         validators=[
-            validate_username,
-        ],
-        db_index=True
+            RegexValidator(
+                regex=USER_REGEX,
+                message='Используйте только буквы и символы: \ w . @ + - ',
+            ),
+        ]
     )
     first_name = models.CharField(
         max_length=150,
@@ -27,9 +32,17 @@ class User(AbstractUser):
         max_length=150,
         verbose_name='Фамилия'
     )
+#    password = models.CharField(
+#       'Пароль', max_length=,
+#    )
+    avatar = models.ImageField(
+        upload_to='media/avatar',
+        blank=True,
+        null=True,
+        verbose_name='Аватар')
 
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['username', 'first_name', 'last_name']
+    REQUIRED_FIELDS = ['username', 'first_name', 'last_name', 'password']
 
     class Meta:
         """Мета-параметры"""

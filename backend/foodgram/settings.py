@@ -10,9 +10,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = os.getenv('SECRET_KEY', get_random_secret_key())
 
-DEBUG = True
-
-#DEBUG = bool(int(os.getenv('DEBUG', '0')))
+DEBUG = bool(int(os.getenv('DEBUG', '0')))
 
 ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', 'localhost').split(', ')
 
@@ -37,7 +35,6 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'corsheaders.middleware.CorsMiddleware',
-    'django.middleware.common.CommonMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -123,20 +120,25 @@ REST_FRAMEWORK = {
 }
 
 
+#DJOSER = {
+#    'LOGIN_FIELD': 'email',
+#    'HIDE_USERS': False,
+#    'PASSWORD_CHANGED_EMAIL_CONFIRMATION': False,
+#    'TOKEN_MODEL': 'rest_framework.authtoken.models.Token',
+#    'SERIALIZERS': {
+#        'user': 'api.serializer.UserSerializer',
+#        'user_create': 'api.serializer.CreateUserSerializer',
+#        'current_user': 'api.serializer.UserSerializer',
+#    },
+#    'PERMISSIONS': {
+#        'user': ['djoser.permissions.CurrentUserOrAdminOrReadOnly'],
+#        'user_list': ['rest_framework.permissions.AllowAny']
+#    },
+#}
+
+
 DJOSER = {
     'LOGIN_FIELD': 'email',
-    'HIDE_USERS': False,
-    'PASSWORD_CHANGED_EMAIL_CONFIRMATION': False,
-    'TOKEN_MODEL': 'rest_framework.authtoken.models.Token',
-    'SERIALIZERS': {
-        'user': 'api.serializer.CustomUserSerializer',
-        'user_create': 'api.serializer.CustomCreateUserSerializer',
-        'current_user': 'api.serializer.CustomUserSerializer',
-    },
-    'PERMISSIONS': {
-        'user': ['djoser.permissions.CurrentUserOrAdminOrReadOnly'],
-        'user_list': ['rest_framework.permissions.AllowAny']
-    },
 }
 
 CSV_FILES_DIR = os.path.join(BASE_DIR, 'data')

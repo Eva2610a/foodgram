@@ -18,7 +18,7 @@ class RecipeAdmin(ModelAdmin):
         'pk', 'name', 'author', 'get_favorites', 'get_tags', 'created'
     )
     list_filter = ('author', 'name', 'tags')
-    search_fields = ('name',)
+    search_fields = ('name', 'author')
 
     def get_favorites(self, obj):
         return obj.favorites.count()
