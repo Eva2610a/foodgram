@@ -4,9 +4,7 @@ from recipes.models import Ingredient, Recipe, Tag
 
 
 class RecipeFilter(filters.FilterSet):
-    """
-    Определяет параметры фильтрации для рецептов.
-    """
+    """Фильтрации для рецептов."""
 
     tags = filters.ModelMultipleChoiceFilter(
         field_name='tags__slug',
@@ -26,7 +24,7 @@ class RecipeFilter(filters.FilterSet):
         if value:
             if user.is_anonymous:
                 return queryset.none()
-            return queryset.filter(favorited_by__user=user)
+            return queryset.filter(favorites__user=user)
         return queryset
 
     def filter_is_in_shopping_cart(self, queryset, name, value):
@@ -34,7 +32,7 @@ class RecipeFilter(filters.FilterSet):
         if value:
             if user.is_anonymous:
                 return queryset.none()
-            return queryset.filter(in_shopping_cart__user=user)
+            return queryset.filter(shopping_recipe__user=user)
         return
 
     class Meta:
@@ -43,11 +41,9 @@ class RecipeFilter(filters.FilterSet):
 
 
 class IngredientFilter(filters.FilterSet):
-    """
-    Определяет параметры фильтрации для ингредиентов.
-    """
+    """Фильтрация для ингредиентов."""
 
-    name = filters.CharFilter(field_name='name', lookup_expr='icontains')
+    name = filters.CharFilter(field_name='name', lookup_expr='istartswith')
 
     class Meta:
         model = Ingredient

@@ -1,8 +1,6 @@
 import csv
-import hashids
 from io import StringIO
 
-from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.db.models import Sum
 from django.http import HttpResponse
@@ -48,17 +46,13 @@ User = get_user_model()
 
 
 def redirect_to_recipe(request, short_code):
-    """
-    Перенаправляет на полный URL рецепта по короткому коду.
-    """
+    """Перенаправление на полный URL рецепта по короткому коду."""
     recipe = get_object_or_404(Recipe, short_code=short_code)
     return redirect(f'/recipes/{recipe.id}')
 
 
 class UserViewSet(ModelViewSet):
-    """
-    ViewSet для управления пользователями.
-    """
+    """Управление пользователями."""
 
     permission_classes = (AllowAny,)
     queryset = User.objects.all()
@@ -164,12 +158,7 @@ class UserViewSet(ModelViewSet):
 
 
 class UserSelfView(APIView):
-    """
-    Представление для получения данных
-    текущего пользователя.
-
-    Доступно только для аутентифицированных пользователей.
-    """
+    """получения данных аутентифицированного текущего пользователя."""
 
     permission_classes = (IsAuthenticated,)
     pagination_class = CustomPagination
@@ -180,9 +169,7 @@ class UserSelfView(APIView):
 
 
 class UserAvatarView(APIView):
-    """
-    ViewSet для работы с аватаром.
-    """
+    """Работа с аватаром."""
 
     permission_classes = [IsAuthenticated]
 
@@ -203,9 +190,7 @@ class UserAvatarView(APIView):
 
 
 class TagViewSet(ModelViewSet):
-    """
-    ViewSet для работы с тегами.
-    """
+    """Работы с тегами."""
 
     queryset = Tag.objects.all()
     serializer_class = TagSerializer
@@ -215,9 +200,7 @@ class TagViewSet(ModelViewSet):
 
 
 class RecipeViewSet(ModelViewSet, RecipeActionMixin):
-    """
-    ViewSet для управления рецептами.
-    """
+    """Управление рецептами."""
 
     queryset = Recipe.objects.all()
     serializer_class = RecipeSerializer
@@ -256,9 +239,7 @@ class RecipeViewSet(ModelViewSet, RecipeActionMixin):
         url_path='get-link'
     )
     def get_link(self, request, pk=None):
-        """
-        Возвращает короткую ссылку на рецепт.
-        """
+        """Возвращает короткую ссылку на рецепт."""
         recipe = self.get_object()
         link = request.build_absolute_uri(f'/api/r/{recipe.short_code}')
         return Response({'short-link': link})
@@ -300,7 +281,7 @@ class RecipeViewSet(ModelViewSet, RecipeActionMixin):
 
     @staticmethod
     def ingredients_to_txt(ingredients):
-        """Метод для объединения ингредиентов в список для загрузки"""
+        """Объединение ингредиентов в список для загрузки"""
 
         shopping_list = ''
         for ingredient in ingredients:
@@ -319,9 +300,7 @@ class RecipeViewSet(ModelViewSet, RecipeActionMixin):
         url_name='download_shopping_cart',
     )
     def download_shopping_cart(self, request):
-        """Метод для загрузки ингредиентов и их количества
-         для выбранных рецептов"""
-
+        """Загрузка ингредиентов и их кол-ва для выбранных рецептов."""
         ingredients = IngredientInRecipe.objects.filter(
             recipe__shopping_recipe__user=request.user
         ).values(
@@ -333,15 +312,13 @@ class RecipeViewSet(ModelViewSet, RecipeActionMixin):
 
 
 class IngredientViewSet(ModelViewSet):
-    """
-    ViewSet для управления ингредиентами.
-    """
+    """Управление ингредиентами."""
 
     queryset = Ingredient.objects.all()
     serializer_class = IngredientSerializer
     http_method_names = ['get']
     permission_classes = (AllowAny,)
-    filter_backends = (DjangoFilterBackend, filters.SearchFilter)
+    filter_backends = (DjangoFilterBackend, )
     pagination_class = None
     filterset_class = IngredientFilter
     search_fields = ('^name', )

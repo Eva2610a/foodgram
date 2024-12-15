@@ -32,9 +32,7 @@ class Base64ImageField(serializers.ImageField):
 
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
-    """
-    Сериализатор для регистрации новых пользователей.
-    """
+    """Регистрация новых пользователей."""
 
     email = serializers.EmailField(
         required=True,
@@ -57,9 +55,7 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
 
 
 class UserSerializer(serializers.ModelSerializer, IsSubscribedMixin):
-    """
-    Сериализатор для представления информации о пользователях.
-    """
+    """Представление информации о пользователях."""
 
     is_subscribed = serializers.SerializerMethodField()
 
@@ -79,9 +75,7 @@ class PasswordSetSerializer(serializers.Serializer):
 
 
 class RecipeShortSerializer(serializers.ModelSerializer):
-    """
-    Сериализатор для краткого представления рецептов.
-    """
+    """Краткое представления рецептов."""
     image = Base64ImageField()
 
     class Meta:
@@ -129,9 +123,7 @@ class UserSubscriptionSerializer(
 
 
 class TagSerializer(serializers.ModelSerializer):
-    """
-    Сериализатор для работы с тегами.
-    """
+    """Сериализатор для работы с тегами."""
 
     class Meta:
         model = Tag
@@ -139,9 +131,7 @@ class TagSerializer(serializers.ModelSerializer):
 
 
 class AvatarSerializer(serializers.ModelSerializer):
-    """
-    Сериализатор для обработки аватара пользователя.
-    """
+    """Обработка аватара пользователя."""
 
     avatar = Base64ImageField(max_length=None, use_url=True)
 
@@ -159,9 +149,7 @@ class AvatarSerializer(serializers.ModelSerializer):
 
 
 class IngredientInRecipeSerializer(serializers.ModelSerializer):
-    """
-    Сериализатор для работы с ингредиентами, использующимися в рецептах.
-    """
+    """Работа с ингредиентами, использующимися в рецептах."""
 
     id = serializers.PrimaryKeyRelatedField(
         queryset=Ingredient.objects.all(), source='ingredient.id'
@@ -178,9 +166,7 @@ class IngredientInRecipeSerializer(serializers.ModelSerializer):
 
 
 class RecipeSerializer(serializers.ModelSerializer):
-    """
-    Основной сериализатор для рецептов.
-    """
+    """Основной сериализатор для рецептов."""
 
     cooking_time = serializers.IntegerField(min_value=1)
     image = Base64ImageField(max_length=None, use_url=True)
@@ -308,9 +294,7 @@ class RecipeSerializer(serializers.ModelSerializer):
 
 
 class FavoriteShoppingCartSerializer(serializers.ModelSerializer):
-    """
-    Сериализатор для работы с избранными рецептами и корзиной.
-    """
+    """Избранные рецепты и корзина."""
 
     class Meta:
         model = Recipe
@@ -318,9 +302,7 @@ class FavoriteShoppingCartSerializer(serializers.ModelSerializer):
 
 
 class IngredientSerializer(serializers.ModelSerializer):
-    """
-    Сериализатор для ингредиентов.
-    """
+    """Сериализатор для ингредиентов."""
 
     class Meta:
         model = Ingredient

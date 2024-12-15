@@ -5,9 +5,7 @@ from recipes.models import Follow
 
 
 class IsSubscribedMixin:
-    """
-    Миксин для проверки подписки пользователя на автора.
-    """
+    """Проверка подписки пользователя на автора."""
 
     def get_is_subscribed(self, obj):
         request = self.context.get('request')
@@ -24,9 +22,7 @@ class IsSubscribedMixin:
 
 
 class RecipeActionMixin:
-    """
-    Миксин для добавления или удаления рецепта в/из избранного или корзины.
-    """
+    """Добавление или удаления рецепта избранного или корзины."""
 
     def check_recipe_action(self, request, model, serializer_class):
         recipe = self.get_object()
