@@ -3,7 +3,6 @@ from django.db import models
 from django.core.validators import RegexValidator
 
 
-
 class User(AbstractUser):
     """Модель для пользователей, созданная для приложения foodgram"""
     USER_REGEX = r'^[\w.@+-]+$'
@@ -20,7 +19,7 @@ class User(AbstractUser):
         validators=[
             RegexValidator(
                 regex=USER_REGEX,
-                message='Используйте только буквы и символы: \ w . @ + - ',
+                message='Используйте только буквы и символы: w . @ + - ',
             ),
         ]
     )
