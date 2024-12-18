@@ -2,8 +2,6 @@ import base64
 
 from django.core.files.base import ContentFile
 from rest_framework import serializers
-from django.contrib.auth import get_user_model
-from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
 
 from api.mixins import IsSubscribedMixin
@@ -14,7 +12,6 @@ from recipes.models import (Favorite,
                             ShoppingCart,
                             Tag
                             )
-
 from users.models import User
 
 

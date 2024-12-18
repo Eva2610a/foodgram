@@ -6,7 +6,7 @@ from django.db.models import Sum
 from django.http import HttpResponse
 from django.shortcuts import redirect, get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import filters, status
+from rest_framework import status
 from rest_framework.decorators import action
 from rest_framework.permissions import (AllowAny,
                                         IsAuthenticated,

@@ -119,24 +119,6 @@ REST_FRAMEWORK = {
     ],
 }
 
-
-#DJOSER = {
-#    'LOGIN_FIELD': 'email',
-#    'HIDE_USERS': False,
-#    'PASSWORD_CHANGED_EMAIL_CONFIRMATION': False,
-#    'TOKEN_MODEL': 'rest_framework.authtoken.models.Token',
-#    'SERIALIZERS': {
-#        'user': 'api.serializer.UserSerializer',
-#        'user_create': 'api.serializer.CreateUserSerializer',
-#        'current_user': 'api.serializer.UserSerializer',
-#    },
-#    'PERMISSIONS': {
-#        'user': ['djoser.permissions.CurrentUserOrAdminOrReadOnly'],
-#        'user_list': ['rest_framework.permissions.AllowAny']
-#    },
-#}
-
-
 DJOSER = {
     'LOGIN_FIELD': 'email',
 }
