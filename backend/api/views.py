@@ -41,7 +41,6 @@ from .serializer import (
     PasswordSetSerializer
 )
 
-
 User = get_user_model()
 
 
