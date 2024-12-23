@@ -20,7 +20,7 @@ services:
     volumes:
       - static_value:/app/result_build/build
   nginx:
-    image: pivko228/nginx:1.25.4-alpine
+    image: pivko228/foodgram_gateway:latest
     ports:
       - "9080:80"
     env_file: .env
