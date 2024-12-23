@@ -3,7 +3,6 @@ from rest_framework import routers
 from djoser import views as djoser_views
 
 from . import views
-
 from .views import (
     IngredientViewSet, TagViewSet, RecipeViewSet,
     UserViewSet, redirect_to_recipe
