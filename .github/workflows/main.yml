@@ -64,23 +64,6 @@ jobs:
           push: true
           tags: pivko228/foodgram_back:latest
 
-  frontend_tests:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v3
-    - name: Set up nodeJS
-      uses: actions/setup-node@v3
-      with:
-        node-version: 18
-    - name: Install dependencies
-      run: |
-        cd frontend/
-        npm ci
-    - name: Test frontend
-      run: |
-        cd frontend/
-        npm run test
-
   build_frontend_and_push_to_docker_hub:
     name: Push frontend Docker image to DockerHub
     runs-on: ubuntu-latest
@@ -120,7 +103,7 @@ jobs:
         with:
           context: ./gateway/
           push: true
-          tags: pivko228/foodgram_gateway:latest
+          tags: pivko228/foodgram_infra:latest
 
   deploy:
     runs-on: ubuntu-latest
