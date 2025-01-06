@@ -74,7 +74,7 @@ jobs:
         cd frontend/
         npm cache clean --force 
         npm update
-        npm ci
+        npm ci --legacy-peer-deps
     - name: Test frontend
       run: |
         cd frontend/
