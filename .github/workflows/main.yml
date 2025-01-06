@@ -74,7 +74,6 @@ jobs:
     - name: Install dependencies
       run: |
         cd frontend/
-        npm install package.json --no-save
         npm ci
     - name: Test frontend
       run: |
@@ -169,5 +168,5 @@ jobs:
       with:
         to: ${{ secrets.TELEGRAM_TO }}
         token: ${{ secrets.TELEGRAM_TOKEN }}
-        message: Деплой успешно выполнен!
+        message: Деплой успешно выполнен!!
         
