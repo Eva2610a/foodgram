@@ -166,11 +166,11 @@ class IngredientInRecipe(models.Model):
         verbose_name="Количество",
         validators=[
             MinValueValidator(
-                min_value=MESSAGE,
+                MESSAGE,
                 message="Минимальное кол-во 1!"
             ),
             MaxValueValidator(
-                max_value=MES_MAX,
+                MES_MAX,
                 message="Слишком большое значение!"
             )
         ]
