@@ -10,7 +10,7 @@ from recipes.models import (Ingredient,
                             Tag
                             )
 from users.models import User
-from const import MAXLEN, MESSAGE, MES_MAX
+from backend.constant import MAXLEN, MESSAGE, MES_MAX
 
 
 class Base64ImageField(serializers.ImageField):
