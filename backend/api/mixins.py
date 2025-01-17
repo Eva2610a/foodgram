@@ -1,8 +1,6 @@
 from rest_framework import status
 from rest_framework.response import Response
 
-from recipes.models import Follow
-
 
 class IsSubscribedMixin:
     """Проверка подписки пользователя на автора."""
@@ -14,8 +12,8 @@ class IsSubscribedMixin:
             request, 'user'
         ) and request.user.is_authenticated:
 
-            return Follow.objects.filter(
-                user=request.user, author=obj
+            return obj.follower.filter(
+                user=request.user
             ).exists()
 
         return False

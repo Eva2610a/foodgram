@@ -1,7 +1,10 @@
 from django.contrib.auth import get_user_model
-from django.core.validators import MinValueValidator
+from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 from django.utils.crypto import get_random_string
+
+from api.const import MESSAGE, MES_MAX
+
 User = get_user_model()
 
 
@@ -23,10 +26,11 @@ class Tag(models.Model):
 
         verbose_name = "Тег"
         verbose_name_plural = "Теги"
+        ordering = ("id",)
         constraints = (
             models.UniqueConstraint(
-                fields=('name', 'slug'),
-                name='unique_tags',
+                fields=("name", "slug"),
+                name="unique_tags",
             ),
         )
 
@@ -51,13 +55,13 @@ class Ingredient(models.Model):
     class Meta:
         """Класс мета."""
 
-        ordering = ('name',)
+        ordering = ("name",)
         verbose_name = "Ингредиент"
         verbose_name_plural = "Ингредиенты"
 
     def __str__(self):
         """Метод строкового представления модели."""
-        return f'{self.name}, {self.measurement_unit}'
+        return f"{self.name}, {self.measurement_unit}"
 
 
 class Recipe(models.Model):
@@ -75,7 +79,7 @@ class Recipe(models.Model):
     )
     image = models.ImageField(
         verbose_name="Фотография рецепта",
-        upload_to='recipes/',
+        upload_to="recipes/",
         blank=True
     )
     text = models.TextField(
@@ -93,9 +97,16 @@ class Recipe(models.Model):
         verbose_name="Теги",
     )
     cooking_time = models.PositiveSmallIntegerField(
-        'Время приготовления',
+        "Время приготовления",
         validators=[
-            MinValueValidator(1, message='Минимальное значение 1!'),
+            MinValueValidator(
+                min_value=MESSAGE,
+                message="Минимальное значение 1!"
+            ),
+            MaxValueValidator(
+                max_value=MES_MAX,
+                message="Слишком большое значение!"
+            )
         ]
     )
     short_code = models.CharField(
@@ -103,20 +114,20 @@ class Recipe(models.Model):
         unique=True,
         blank=True,
         null=True,
-        verbose_name='Короткий код'
+        verbose_name="Короткий код"
     )
     created = models.DateTimeField(
         auto_now_add=True,
         db_index=True,
-        verbose_name='Дата публикации рецепта'
+        verbose_name="Дата публикации рецепта"
     )
 
     class Meta:
         """Класс мета."""
 
-        verbose_name = 'Рецепт'
-        verbose_name_plural = 'Рецепты'
-        ordering = ('-created',)
+        verbose_name = "Рецепт"
+        verbose_name_plural = "Рецепты"
+        ordering = ("-created",)
 
     def __str__(self):
         """Метод строкового представления модели."""
@@ -154,7 +165,14 @@ class IngredientInRecipe(models.Model):
     amount = models.PositiveSmallIntegerField(
         verbose_name="Количество",
         validators=[
-            MinValueValidator(1, message="Минимальное кол-во 1.")
+            MinValueValidator(
+                min_value=MESSAGE,
+                message="Минимальное кол-во 1!"
+            ),
+            MaxValueValidator(
+                max_value=MES_MAX,
+                message="Слишком большое значение!"
+            )
         ]
     )
 
@@ -165,14 +183,14 @@ class IngredientInRecipe(models.Model):
         verbose_name_plural = "Ингредиенты в рецептах"
         constraints = [
             models.UniqueConstraint(
-                fields=('recipe', 'ingredient'),
+                fields=("recipe", "ingredient"),
                 name="unique_ingredients_in_the_recipe"
             )
         ]
 
     def __str__(self):
         """Метод строкового представления модели."""
-        return f'{self.ingredient} {self.recipe}'
+        return f"{self.ingredient} {self.recipe}"
 
 
 class TagInRecipe(models.Model):
@@ -194,13 +212,13 @@ class TagInRecipe(models.Model):
         verbose_name = "Тег рецепта"
         verbose_name_plural = "Теги рецепта"
         constraints = [
-            models.UniqueConstraint(fields=['tag', 'recipe'],
-                                    name='unique_tagrecipe')
+            models.UniqueConstraint(fields=["tag", "recipe"],
+                                    name="unique_tagrecipe")
         ]
 
     def __str__(self):
         """Метод строкового представления модели."""
-        return f'{self.tag} {self.recipe}'
+        return f"{self.tag} {self.recipe}"
 
 
 class ShoppingCart(models.Model):
@@ -226,13 +244,13 @@ class ShoppingCart(models.Model):
         verbose_name_plural = "Списки покупок"
         constraints = [
             models.UniqueConstraint(
-                fields=['user', 'recipe'], name='unique_shoppingcart'
+                fields=["user", "recipe"], name="unique_shoppingcart"
             )
         ]
 
     def __str__(self):
         """Метод строкового представления модели."""
-        return f'{self.user} {self.recipe}'
+        return f"{self.user} {self.recipe}"
 
 
 class Follow(models.Model):
@@ -258,13 +276,13 @@ class Follow(models.Model):
         verbose_name_plural = "Подписки"
         constraints = [
             models.UniqueConstraint(
-                fields=['user', 'author'], name='unique_follow'
+                fields=["user", "author"], name="unique_follow"
             )
         ]
 
     def __str__(self):
         """Метод строкового представления модели."""
-        return f'{self.user} {self.author}'
+        return f"{self.user} {self.author}"
 
 
 class Favorite(models.Model):
@@ -290,10 +308,10 @@ class Favorite(models.Model):
         verbose_name_plural = "Избранное"
         constraints = [
             models.UniqueConstraint(
-                fields=['user', 'recipe'], name='unique_favorite'
+                fields=["user", "recipe"], name="unique_favorite"
             )
         ]
 
     def __str__(self):
         """Метод строкового представления модели."""
-        return f'{self.user} {self.recipe}'
+        return f"{self.user} {self.recipe}"

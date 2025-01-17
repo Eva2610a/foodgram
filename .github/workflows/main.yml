@@ -42,7 +42,7 @@ jobs:
         cd backend/
         python manage.py test
 
- #Нет fronted теста потому что настройки для файла  package.json не синхронизирован и не даёт запустить тесты для фронтеда      
+ # Тесты fronted отключены потому что настройки для файла  package.json не синхронизирован и не даёт запустить тесты для фронтеда      
 
   build_and_push_to_docker_hub:
     name: Push Docker image to DockerHub

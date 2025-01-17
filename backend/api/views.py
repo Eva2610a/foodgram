@@ -92,8 +92,8 @@ class UserViewSet(ModelViewSet):
         current_user = request.user
 
         if request.method == 'DELETE':
-            subscription = Follow.objects.filter(
-                user=current_user, author=target_user
+            subscription = target_user.follower.filter(
+                user=current_user
             ).first()
 
             if not subscription:
@@ -105,14 +105,8 @@ class UserViewSet(ModelViewSet):
             subscription.delete()
             return Response(status=status.HTTP_204_NO_CONTENT)
 
-        if target_user == current_user:
-            return Response(
-                {'detail': 'Нельзя подписаться на самого себя.'},
-                status=status.HTTP_400_BAD_REQUEST
-            )
-
-        if Follow.objects.filter(
-                user=current_user, author=target_user).exists():
+        if target_user.follower.filter(
+                user=current_user).exists():
             return Response(
                 {'detail': 'Вы уже подписаны на этого пользователя.'},
                 status=status.HTTP_400_BAD_REQUEST
@@ -135,8 +129,7 @@ class UserViewSet(ModelViewSet):
     )
     def subscriptions(self, request):
         user = request.user
-        author_ids = Follow.objects.filter(
-            user=user).values_list('author', flat=True)
+        author_ids = user.follow.values_list('author', flat=True)
 
         authors = User.objects.filter(id__in=author_ids)
 
@@ -290,24 +283,6 @@ class RecipeViewSet(ModelViewSet, RecipeActionMixin):
                 f"({ingredient['ingredient__measurement_unit']})\n"
             )
         return shopping_list
-
-    @action(
-        detail=False,
-        methods=('get',),
-        permission_classes=(IsAuthenticated,),
-        url_path='download_shopping_cart',
-        url_name='download_shopping_cart',
-    )
-    def download_shopping_cart(self, request):
-        """Загрузка ингредиентов и их кол-ва для выбранных рецептов."""
-        ingredients = IngredientInRecipe.objects.filter(
-            recipe__shopping_recipe__user=request.user
-        ).values(
-            'ingredient__name',
-            'ingredient__measurement_unit'
-        ).annotate(sum=Sum('amount'))
-        shopping_list = self.ingredients_to_txt(ingredients)
-        return HttpResponse(shopping_list, content_type='text/plain')
 
 
 class IngredientViewSet(ModelViewSet):

@@ -18,20 +18,20 @@ router.register("recipes", RecipeViewSet, basename="recipes")
 name_app = "api"
 
 urlpatterns = [
-    path('', include(router.urls)),
-    path('', include('djoser.urls')),
-    path('auth/', include('djoser.urls.authtoken')),
+    path("", include(router.urls)),
+    path("", include("djoser.urls")),
+    path("auth/", include("djoser.urls.authtoken")),
     path(
-        'users/me/avatar/', views.UserAvatarView.as_view(), name='user-avatar'
+        "users/me/avatar/", views.UserAvatarView.as_view(), name="user-avatar"
     ),
     path(
-        'users/me/', views.UserSelfView.as_view(), name='user-self'
+        "users/me/", views.UserSelfView.as_view(), name="user-self"
     ),
     path(
-        'users/set_password/',
-        djoser_views.UserViewSet.as_view({'post': 'set_password'}),
-        name='user-set-password'
+        "users/set_password/",
+        djoser_views.UserViewSet.as_view({"post": "set_password"}),
+        name="user-set-password"
     ),
-    path('s/<str:short_id>/', redirect_to_recipe, name='short-link-redirect'),
+    path("s/<str:short_id>/", redirect_to_recipe, name="short-link-redirect"),
 
 ]
