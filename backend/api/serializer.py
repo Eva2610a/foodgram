@@ -33,8 +33,8 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         required=True,
         validators=[UniqueValidator(queryset=User.objects.all())]
     )
-    first_name = serializers.CharField(MAXLEN, required=True)
-    last_name = serializers.CharField(MAXLEN, required=True)
+    first_name = serializers.CharField(max_length=MAXLEN, required=True)
+    last_name = serializers.CharField(max_length=MAXLEN, required=True)
 
     class Meta:
         model = User
