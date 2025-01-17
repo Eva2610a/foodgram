@@ -3,7 +3,7 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 from django.utils.crypto import get_random_string
 
-from api.const import MESSAGE, MES_MAX
+from ..api.const import MESSAGE, MES_MAX
 
 User = get_user_model()
 
