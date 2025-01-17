@@ -10,7 +10,7 @@ from recipes.models import (Ingredient,
                             Tag
                             )
 from users.models import User
-from sprint_18.foodgram.backend.const import MAXLEN, MESSAGE, MES_MAX
+from foodgram.backend.const import MAXLEN, MESSAGE, MES_MAX
 
 
 class Base64ImageField(serializers.ImageField):
